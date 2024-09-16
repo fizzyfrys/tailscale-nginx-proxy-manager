@@ -1,0 +1,54 @@
+name: Build and Push Docker Image to GHCR
+
+on:
+  schedule:
+    # Schedule this workflow to run every 6 hours
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
+    # Allows manual triggering of the workflow
+  push:
+    # Trigger the workflow on push to the main branch
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+        with:
+          install: true
+          driver-opts: network=host
+
+      - name: Check for new base image
+        id: check_image_update
+        run: |
+          base_image="jc21/nginx-proxy-manager"
+          latest_tag="latest"
+          
+          # Fetch the latest tag details from Docker Hub API
+          response=$(curl -s "https://hub.docker.com/v2/repositories/$base_image/tags/$latest_tag/")
+          
+          # Extract the 'last_updated' value from the response
+          last_updated=$(echo "$response" | grep -o '"last_updated":"[^"]*' | sed 's/"last_updated":"//')
+
+          echo "Latest tag last updated: $last_updated"
+
+          # Set output variable for last_updated to use in the next step
+          echo "last_updated=$last_updated" >> $GITHUB_ENV
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push Docker image to GHCR
+        run: |
+          IMAGE_NAME=ghcr.io/${{ github.repository_owner }}/tailscale-nginx-proxy-manager:latest
+          docker buildx build --platform linux/amd64,linux/arm64 -t $IMAGE_NAME --push .
