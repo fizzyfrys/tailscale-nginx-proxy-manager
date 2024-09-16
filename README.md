@@ -97,3 +97,8 @@ One of the benefits of this setup is using Nginx Proxy Manager's stream function
 ### Final Notes
 
  I'm not really a programmer so sorry in advance. If anyone has any improvements, suggestions, or ideas, please feel free to contribute!
+
+
+shameless:
+
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/I2I013FM5W)
