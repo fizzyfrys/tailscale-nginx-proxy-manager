@@ -11,6 +11,10 @@ on:
     branches:
       - main
 
+permissions:
+  contents: read
+  packages: write  # Explicitly grant write access to packages
+
 jobs:
   build:
     runs-on: ubuntu-latest
