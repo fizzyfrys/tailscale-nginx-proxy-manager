@@ -53,7 +53,7 @@ networks:
 ### Initial Setup
 
 1. **Login to Tailscale:**
-   To authenticate with Tailscale, run the following command:
+   To authenticate with Tailscale, run the following command and open the login link:
    ```sh
    docker exec -it tailscale-nginx-proxy-manager tailscale up
    ```
