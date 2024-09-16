@@ -1,0 +1,27 @@
+version: '3.8'
+services:
+  tsnpm:
+    image: 'fizzyfrys/tailscale-nginx-proxy-manager:latest'
+    restart: unless-stopped
+    hostname: tsnpm # This will also show up as the hostname in tailscale
+    container_name: tailscale-nginx-proxy-manager
+    ports:
+      - '80:80'   # Public HTTP Port
+      - '443:443' # Public HTTPS Port
+      - '81:81'   # Admin Web Port
+      - '41741:41741/udp' # Tailscale Port (optional)
+    volumes:
+      - /containers/nginxproxymanager/data:/data # NginxProxyManager data
+      - /containers/nginxproxymanager/letsencrypt:/etc/letsencrypt # NginxProxyManager SSL/TLS certificates
+      - /containers/nginxproxymanager/tailscale:/var/lib/tailscale # Persistent storage for Tailscale state
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    devices:
+      - /dev/net/tun
+    privileged: true
+
+networks:
+  default:
+    name: custom-docker-network
+    external: true
