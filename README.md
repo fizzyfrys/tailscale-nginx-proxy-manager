@@ -36,7 +36,7 @@ services:
     volumes:
       - /containers/nginxproxymanager/data:/data # NginxProxyManager data
       - /containers/nginxproxymanager/letsencrypt:/etc/letsencrypt # NginxProxyManager SSL/TLS certificates
-      - /containers/nginxproxymanager/tailscale:/var/lib/tailscale # Persistent storage for Tailscale state
+      - npm-tailscale-state:/var/lib/tailscale # Persistent storage for Tailscale state via Docker volume
     cap_add:
       - NET_ADMIN
       - SYS_MODULE
